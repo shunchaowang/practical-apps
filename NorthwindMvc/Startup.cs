@@ -36,7 +36,7 @@ namespace NorthwindMvc
           .AddEntityFrameworkStores<ApplicationDbContext>();
       services.AddControllersWithViews();
       services.AddRazorPages();
-      string databasePath = Path.Combine("..", "Nowthwind.db");
+      string databasePath = Path.Combine("..", "Northwind.db");
       services.AddDbContext<NorthwindDbContext>(options =>
         options.UseSqlite($"DataSource={databasePath}")
       );
