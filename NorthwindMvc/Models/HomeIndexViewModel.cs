@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Northwind.Context;
 using Northwind.Model;
 
 namespace NorthwindMvc.Models
