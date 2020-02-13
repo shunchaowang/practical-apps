@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NorthwindMvc.Models;
 using Northwind.Context;
+using Northwind.Model;
 
 namespace NorthwindMvc.Controllers
 {
@@ -74,6 +76,26 @@ namespace NorthwindMvc.Controllers
         ValidationErrors = ModelState.Values.SelectMany(state => state.Errors)
               .Select(error => error.ErrorMessage)
       };
+      return View(model);
+    }
+
+    public IActionResult ProductsThatCostMoreThan(decimal? price)
+    {
+      if (!price.HasValue)
+      {
+        return NotFound("You must pass a prodct price in the query string, for example, " +
+        "/Home/ProductsThatCostMoreThan?price=50");
+
+      }
+      IEnumerable<Product> model = dbContext.Products
+        .Include(p => p.Category).Include(p => p.Supplier)
+        .AsEnumerable().Where(p => p.UnitPrice > price);
+
+      if (model.Count() == 0)
+      {
+        return NotFound($"No products cost more than {price: C}.");
+      }
+      ViewData["MaxPrice"] = price.Value.ToString("C");
       return View(model);
     }
   }
