@@ -1,0 +1,24 @@
+@model NorthwindMvc.Models.CategoryIndexViewModel
+
+@{
+  ViewData["Title"] = "Category";
+}
+
+<div class="row">
+  <div class="col-md-12">
+    <div id="newspaper">
+      <ul>
+        @foreach (var item in @Model.Categories)
+        {
+         <li>
+           <a asp-controller="Category"
+              asp-action="CategoryDetail"
+              asp-route-id="@item.CategoryID">
+              @item.CategoryName
+           </a>
+         </li>   
+        }
+      </ul>
+    </div>
+  </div>
+</div>
