@@ -1,10 +1,16 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
+
+using NorthwindMvc.Models;
 using Northwind.Context;
+using Northwind.Model;
 
 namespace NorthwindMvc.Controllers
 {
@@ -21,12 +27,26 @@ namespace NorthwindMvc.Controllers
 
     public async Task<IActionResult> Index()
     {
-      return null;
+      var model = new CategoryIndexViewModel
+      {
+        Categories = await dbContext.Categories.ToListAsync(),
+      };
+      return View(model);
     }
 
     public async Task<IActionResult> CategoryDetail(int? id)
     {
-      return null;
+      if (!id.HasValue)
+      {
+        return NotFound("You must pass a category ID in the route.");
+      }
+      var model = await dbContext.Categories.SingleOrDefaultAsync(c => c.CategoryID == id);
+      if (model == null)
+      {
+        return NotFound($"Category with ID of {id} not found.");
+      }
+
+      return View(model);
     }
   }
 }
